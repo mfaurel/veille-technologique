@@ -1,0 +1,166 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'rapports/veille-*.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build static site
+        run: |
+          python3 - <<'PYEOF'
+          import os, re, html, glob
+          from datetime import datetime
+
+          OUT = "_site"
+          os.makedirs(OUT, exist_ok=True)
+
+          CSS = """
+          * { box-sizing: border-box; margin: 0; padding: 0; }
+          body { font-family: system-ui, sans-serif; background: #f8f9fa; color: #212529; line-height: 1.6; }
+          .container { max-width: 860px; margin: 0 auto; padding: 2rem 1rem; }
+          header { border-bottom: 2px solid #dee2e6; padding-bottom: 1rem; margin-bottom: 2rem; }
+          header h1 { font-size: 1.8rem; color: #0d6efd; }
+          header p { color: #6c757d; font-size: 0.9rem; margin-top: 0.25rem; }
+          .report-list { list-style: none; }
+          .report-list li { margin-bottom: 0.75rem; }
+          .report-list a { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem;
+            background: #fff; border: 1px solid #dee2e6; border-radius: 6px; text-decoration: none;
+            color: #212529; transition: border-color 0.15s, box-shadow 0.15s; }
+          .report-list a:hover { border-color: #0d6efd; box-shadow: 0 0 0 3px rgba(13,110,253,.1); }
+          .report-list .date { font-weight: 600; color: #0d6efd; min-width: 7rem; }
+          .report-list .count { margin-left: auto; font-size: 0.8rem; color: #6c757d; }
+          h1 { font-size: 1.6rem; margin: 1.5rem 0 0.75rem; }
+          h2 { font-size: 1.3rem; margin: 1.25rem 0 0.5rem; color: #495057; border-bottom: 1px solid #e9ecef; padding-bottom: 0.25rem; }
+          h3 { font-size: 1.05rem; margin: 1rem 0 0.4rem; }
+          p { margin: 0.6rem 0; }
+          ul { margin: 0.5rem 0 0.5rem 1.5rem; }
+          li { margin: 0.35rem 0; }
+          a { color: #0d6efd; }
+          a:hover { text-decoration: underline; }
+          hr { border: none; border-top: 1px solid #dee2e6; margin: 1.5rem 0; }
+          .back { display: inline-block; margin-bottom: 1.5rem; font-size: 0.9rem; }
+          strong { font-weight: 600; }
+          """
+
+          def md_to_html(text):
+              lines = text.split('\n')
+              out = []
+              in_ul = False
+              for line in lines:
+                  # headings
+                  m = re.match(r'^(#{1,3})\s+(.*)', line)
+                  if m:
+                      if in_ul: out.append('</ul>'); in_ul = False
+                      level = len(m.group(1))
+                      content = inline(m.group(2))
+                      out.append(f'<h{level}>{content}</h{level}>')
+                      continue
+                  # hr
+                  if re.match(r'^---+$', line.strip()):
+                      if in_ul: out.append('</ul>'); in_ul = False
+                      out.append('<hr>')
+                      continue
+                  # list item
+                  m = re.match(r'^[-*]\s+(.*)', line)
+                  if m:
+                      if not in_ul: out.append('<ul>'); in_ul = True
+                      out.append(f'<li>{inline(m.group(1))}</li>')
+                      continue
+                  # blank line
+                  if not line.strip():
+                      if in_ul: out.append('</ul>'); in_ul = False
+                      continue
+                  # paragraph
+                  if in_ul: out.append('</ul>'); in_ul = False
+                  out.append(f'<p>{inline(line)}</p>')
+              if in_ul: out.append('</ul>')
+              return '\n'.join(out)
+
+          def inline(text):
+              text = html.escape(text)
+              # bold
+              text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
+              # links
+              text = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'<a href="\2" target="_blank" rel="noopener">\1</a>', text)
+              return text
+
+          def page(title, body, back=False):
+              nav = '<a class="back" href="index.html">← Retour</a>' if back else ''
+              return f"""<!doctype html>
+          <html lang="fr">
+          <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+          <title>{html.escape(title)}</title>
+          <style>{CSS}</style>
+          </head>
+          <body><div class="container">
+          {nav}
+          {body}
+          </div></body></html>"""
+
+          reports = sorted(glob.glob('rapports/veille-*.md'), reverse=True)
+
+          # Build each report page
+          entries = []
+          for path in reports:
+              name = os.path.basename(path)
+              m = re.search(r'(\d{4}-\d{2}-\d{2})', name)
+              date = m.group(1) if m else name
+              text = open(path, encoding='utf-8').read()
+              count = len(re.findall(r'^- \*\*', text, re.MULTILINE))
+              body = md_to_html(text)
+              title = f"Veille tech — {date}"
+              html_name = name.replace('.md', '.html')
+              with open(f"{OUT}/{html_name}", 'w', encoding='utf-8') as f:
+                  f.write(page(title, f'<h1>{html.escape(title)}</h1>\n{body}', back=True))
+              entries.append((date, html_name, count))
+
+          # Build index
+          items = ''
+          for date, html_name, count in entries:
+              label = f'{count} articles' if count else ''
+              items += f'<li><a href="{html_name}"><span class="date">{date}</span><span>Rapport de veille</span><span class="count">{label}</span></a></li>\n'
+
+          index_body = f"""
+          <header>
+            <h1>Veille Technologique</h1>
+            <p>Rapports générés automatiquement — forge logicielle, IA, santé numérique, sécurité</p>
+          </header>
+          <ul class="report-list">{items}</ul>
+          """
+          with open(f"{OUT}/index.html", 'w', encoding='utf-8') as f:
+              f.write(page('Veille Technologique', index_body))
+
+          print(f"Built {len(entries)} report(s) → {OUT}/")
+          PYEOF
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
