@@ -127,3 +127,17 @@ sources:
     site: https://www.lemondeinformatique.fr
     description: Actualités IT professionnelles - infrastructure, sécurité, cloud
     category_override: IT/décideurs
+
+  # ── En anglais ───────────────────────────────────────────────────
+  - name: Hacker News
+    url: https://www.daemonology.net/hn-daily/index.rss
+    site: https://news.ycombinator.com
+    description: Top 5 stories per day from Hacker News Daily
+    parser: hn-daily
+    limit: 5
+
+  - name: Lobste.rs
+    url: https://lobste.rs/rss
+    site: https://lobste.rs
+    description: Curated tech links voted on by the community
+    limit: 4

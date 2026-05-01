@@ -162,10 +162,6 @@ En bref : pour ajouter une source, ouvrez une PR modifiant `skills/veille/source
 
 Looking for an English-language version? Check out [/digest](https://github.com/mfaurel/tech-digest) — the same skill aggregating Hacker News, Lobste.rs and more.
 
-## Auteur
-
-Créé par [Camille Roux](https://www.mfaurel.com) -- développeur, entrepreneur et passionné de veille tech.
-
 ## Licence
 
 [MIT](LICENSE)
