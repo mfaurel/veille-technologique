@@ -1,6 +1,6 @@
 # /veille -- Veille tech francophone pour Claude Code
 
-[![GitHub stars](https://img.shields.io/github/stars/CamilleRoux/veille-techno)](https://github.com/CamilleRoux/veille-techno/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/mfaurel/veille-techno)](https://github.com/mfaurel/veille-technologique/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Claude Code Skill](https://img.shields.io/badge/Claude%20Code-Skill-blue)](https://claude.ai/claude-code)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-3776AB.svg)](https://www.python.org)
@@ -38,8 +38,8 @@ Skill [Claude Code](https://claude.ai/claude-code) qui agrège les flux RSS de s
 Depuis Claude Code, ajoutez le marketplace puis installez le plugin :
 
 ```
-/plugin marketplace add CamilleRoux/veille-techno
-/plugin install veille-techno@CamilleRoux-veille-techno
+/plugin marketplace add mfaurel/veille-techno
+/plugin install veille-techno@mfaurel-veille-techno
 ```
 
 Le skill sera disponible dans tous vos projets.
@@ -47,7 +47,7 @@ Le skill sera disponible dans tous vos projets.
 ### Option B : Installation manuelle (macOS / Linux)
 
 ```bash
-git clone --depth 1 https://github.com/CamilleRoux/veille-techno.git
+git clone --depth 1 https://github.com/mfaurel/veille-technologique.git
 bash veille-techno/install.sh
 ```
 
@@ -55,7 +55,7 @@ bash veille-techno/install.sh
 <summary>One-liner (curl)</summary>
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/CamilleRoux/veille-techno/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/mfaurel/veille-techno/main/install.sh | bash
 ```
 
 Préférer la méthode git clone pour pouvoir inspecter le script avant exécution.
@@ -149,7 +149,7 @@ rm -rf ~/.claude/skills/veille
 Ou via le script :
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/CamilleRoux/veille-techno/main/uninstall.sh | bash
+curl -fsSL https://raw.githubusercontent.com/mfaurel/veille-techno/main/uninstall.sh | bash
 ```
 
 ## Contribuer
@@ -160,11 +160,11 @@ En bref : pour ajouter une source, ouvrez une PR modifiant `skills/veille/source
 
 ## English version
 
-Looking for an English-language version? Check out [/digest](https://github.com/CamilleRoux/tech-digest) — the same skill aggregating Hacker News, Lobste.rs and more.
+Looking for an English-language version? Check out [/digest](https://github.com/mfaurel/tech-digest) — the same skill aggregating Hacker News, Lobste.rs and more.
 
 ## Auteur
 
-Créé par [Camille Roux](https://www.camilleroux.com) -- développeur, entrepreneur et passionné de veille tech.
+Créé par [Camille Roux](https://www.mfaurel.com) -- développeur, entrepreneur et passionné de veille tech.
 
 ## Licence
 

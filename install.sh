@@ -3,7 +3,7 @@ set -euo pipefail
 
 main() {
     SKILL_DIR="${HOME}/.claude/skills/veille"
-    REPO_URL="https://github.com/CamilleRoux/veille-techno"
+    REPO_URL="https://github.com/mfaurel/veille-technologique"
     REPO_TAG="${VEILLE_TAG:-v1.0.0}"
 
     echo "════════════════════════════════════════"
