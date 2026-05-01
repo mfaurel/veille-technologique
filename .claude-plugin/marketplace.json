@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "veille-techno",
+  "owner": {
+    "name": "CamilleRoux"
+  },
+  "metadata": {
+    "description": "Veille tech francophone pour Claude Code"
+  },
+  "plugins": [
+    {
+      "name": "veille-techno",
+      "source": "./",
+      "description": "Skill de veille tech francophone. Agrège les flux RSS (Journal du Hacker, Human Coders News, etc.) et produit un récap des articles récents trié par jour. Zéro dépendance, ~1s."
+    }
+  ]
+}

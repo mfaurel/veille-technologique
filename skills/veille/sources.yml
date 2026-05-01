@@ -1,0 +1,129 @@
+# Sources RSS pour la veille technologique
+# Ajouter une source : copier un bloc ci-dessous avec name + url [+ category_override]
+
+sources:
+
+  # ── Généraliste francophone ──────────────────────────────────────────────────
+
+  - name: Human Coders News
+    url: https://news.humancoders.com/items/feed.rss
+    site: https://news.humancoders.com
+    description: Actualités dev collaboratives par et pour les développeurs
+
+  - name: Journal du Hacker
+    url: https://www.journalduhacker.net/rss
+    site: https://www.journalduhacker.net
+    description: Agrégateur communautaire de news tech francophones
+
+  - name: Dépêches LinuxFr.org
+    url: https://linuxfr.org/news.atom
+    site: https://linuxfr.org/
+    description: Actualités du Libre et Open Source
+
+  # ── Forge logicielle ────────────────────────────────────────────────────────
+
+  - name: Jenkins Blog
+    url: https://www.jenkins.io/blog/rss.xml
+    site: https://www.jenkins.io
+    description: Blog officiel Jenkins - actualités et nouvelles versions
+    category_override: forge/Jenkins
+
+  - name: SonarQube Releases
+    url: https://github.com/SonarSource/sonarqube/releases.atom
+    site: https://www.sonarsource.com
+    description: Nouvelles versions SonarQube (GitHub releases)
+    category_override: forge/Sonar
+
+  - name: SonarSource Blog
+    url: https://www.sonarsource.com/blog/rss/
+    site: https://www.sonarsource.com
+    description: Blog SonarSource - SonarQube, SonarCloud, qualité de code
+    category_override: forge/Sonar
+
+  - name: GitLab Blog
+    url: https://about.gitlab.com/atom.xml
+    site: https://about.gitlab.com
+    description: Blog officiel GitLab - fonctionnalités et nouvelles versions
+    category_override: forge/GitLab
+
+  - name: Harbor Releases
+    url: https://github.com/goharbor/harbor/releases.atom
+    site: https://goharbor.io
+    description: Nouvelles versions Harbor - registry de conteneurs CNCF
+    category_override: forge/Harbor
+
+  - name: Atlassian Blog
+    url: https://www.atlassian.com/blog/rss
+    site: https://www.atlassian.com/blog
+    description: Blog Atlassian - Jira, Confluence, Bitbucket
+    category_override: forge/Jira
+
+  - name: Jira Releases
+    url: https://confluence.atlassian.com/jira/jira-release-notes-197363489.feed
+    site: https://www.atlassian.com/software/jira
+    description: Notes de version Jira Server/DC
+    category_override: forge/Jira
+
+  - name: SquashTM Releases
+    url: https://github.com/squashtest-shadow/squash-tm/releases.atom
+    site: https://squashtest.com
+    description: Nouvelles versions Squash TM - gestion des tests
+    category_override: forge/SquashTM
+
+  # ── Intelligence Artificielle & Claude Code ─────────────────────────────────
+
+  - name: Anthropic Blog
+    url: https://www.anthropic.com/rss.xml
+    site: https://www.anthropic.com
+    description: Blog Anthropic - Claude, Claude Code, recherche en IA
+    category_override: IA/Claude
+
+  - name: OpenAI Blog
+    url: https://openai.com/blog/rss.xml
+    site: https://openai.com/blog
+    description: Blog OpenAI - ChatGPT, GPT, recherche IA
+    category_override: IA/OpenAI
+
+  - name: Google DeepMind Blog
+    url: https://deepmind.google/blog/rss.xml
+    site: https://deepmind.google
+    description: Blog DeepMind - recherche IA fondamentale
+    category_override: IA/DeepMind
+
+  - name: MIT Technology Review IA
+    url: https://www.technologyreview.com/topic/artificial-intelligence/feed
+    site: https://www.technologyreview.com
+    description: Analyses IA du MIT Technology Review
+    category_override: IA/général
+
+  # ── Santé numérique & CTO ───────────────────────────────────────────────────
+
+  - name: CERT-FR Alertes
+    url: https://www.cert.ssi.gouv.fr/alerte/feed/
+    site: https://www.cert.ssi.gouv.fr
+    description: Alertes de sécurité ANSSI - vulnérabilités critiques
+    category_override: sécurité/CERT-FR
+
+  - name: CERT-FR Avis
+    url: https://www.cert.ssi.gouv.fr/avis/feed/
+    site: https://www.cert.ssi.gouv.fr
+    description: Avis de sécurité ANSSI - mises à jour recommandées
+    category_override: sécurité/CERT-FR
+
+  - name: Agence du Numérique en Santé
+    url: https://esante.gouv.fr/actualites/feed
+    site: https://esante.gouv.fr
+    description: ANS - actualités numérique en santé, interopérabilité, HDS
+    category_override: santé-numérique/ANS
+
+  - name: Silicon.fr
+    url: https://www.silicon.fr/feed
+    site: https://www.silicon.fr
+    description: IT et digital pour les décideurs - cloud, DevOps, IA
+    category_override: IT/décideurs
+
+  - name: Le Monde Informatique
+    url: https://www.lemondeinformatique.fr/rss/rss-actualites.xml
+    site: https://www.lemondeinformatique.fr
+    description: Actualités IT professionnelles - infrastructure, sécurité, cloud
+    category_override: IT/décideurs

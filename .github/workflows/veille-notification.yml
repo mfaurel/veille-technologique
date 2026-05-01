@@ -1,0 +1,68 @@
+name: Notification veille quotidienne
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'rapports/veille-*.md'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Extraire les infos du rapport
+        id: report
+        run: |
+          # Trouver le fichier rapport ajouté dans ce commit
+          REPORT=$(git diff --name-only HEAD~1 HEAD -- 'rapports/veille-*.md' | head -1)
+          if [ -z "$REPORT" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          DATE=$(echo "$REPORT" | grep -oP '\d{4}-\d{2}-\d{2}' || echo "inconnu")
+          COUNT=$(grep -c '^- \*\*' "$REPORT" 2>/dev/null || echo "0")
+          REPORT_URL="https://github.com/${{ github.repository }}/blob/main/${REPORT}"
+
+          echo "file=$REPORT"       >> "$GITHUB_OUTPUT"
+          echo "date=$DATE"         >> "$GITHUB_OUTPUT"
+          echo "count=$COUNT"       >> "$GITHUB_OUTPUT"
+          echo "url=$REPORT_URL"    >> "$GITHUB_OUTPUT"
+          echo "skip=false"         >> "$GITHUB_OUTPUT"
+
+          # Stocker le contenu du rapport pour le corps du mail
+          {
+            echo "REPORT_CONTENT<<REPORT_EOF"
+            cat "$REPORT"
+            echo "REPORT_EOF"
+          } >> "$GITHUB_ENV"
+
+      - name: Envoyer la notification email
+        if: steps.report.outputs.skip != 'true'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          secure: true
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "[Veille Tech] ${{ steps.report.outputs.count }} articles — ${{ steps.report.outputs.date }}"
+          to: ${{ secrets.MAIL_TO }}
+          from: "Claude Veille Agent <${{ secrets.SMTP_USERNAME }}>"
+          body: |
+            Bonjour,
+
+            Le rapport de veille technologique du ${{ steps.report.outputs.date }} est disponible.
+            ${{ steps.report.outputs.count }} articles collectés (forge logicielle, IA, santé numérique, sécurité).
+
+            Consulter le rapport en ligne :
+            ${{ steps.report.outputs.url }}
+
+            ──────────────────────────────────────────
+            ${{ env.REPORT_CONTENT }}
+            ──────────────────────────────────────────
+            Ce message est généré automatiquement par Claude Veille Agent.
