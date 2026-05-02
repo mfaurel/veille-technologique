@@ -25,7 +25,8 @@ jobs:
           fi
 
           DATE=$(echo "$REPORT" | grep -oP '\d{4}-\d{2}-\d{2}' || echo "inconnu")
-          COUNT=$(grep -c '^- \*\*' "$REPORT" 2>/dev/null || echo "0")
+          COUNT=$(grep -c '^- \*\*' "$REPORT" 2>/dev/null || true)
+          COUNT=${COUNT:-0}
           REPORT_URL="https://github.com/${{ github.repository }}/blob/main/${REPORT}"
 
           echo "file=$REPORT"       >> "$GITHUB_OUTPUT"
