@@ -92,21 +92,27 @@ _BASE_HEADERS = {
     "DNT": "1",
 }
 
-# Extra headers that make browser UAs look more legitimate
+# Firefox browser headers — Accept-Language uses Firefox-style q weights
 _BROWSER_EXTRA = {
+    "Accept-Language": "fr-FR,fr;q=0.8,en-US;q=0.5,en;q=0.3",
     "Upgrade-Insecure-Requests": "1",
     "Sec-Fetch-Dest": "document",
     "Sec-Fetch-Mode": "navigate",
     "Sec-Fetch-Site": "none",
     "Sec-Fetch-User": "?1",
     "Cache-Control": "max-age=0",
+    # TE: trailers is added inline in _http_get (Chrome does not send it)
 }
 
+# Chrome browser headers — Accept-Language uses Chrome-style q weights
 _CHROME_EXTRA = {
     **_BROWSER_EXTRA,
-    "Sec-Ch-Ua": '"Chromium";v="136", "Google Chrome";v="136", "Not-A.Brand";v="99"',
+    "Accept-Language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
+    # "Not A Brand" (space, no dots) is the correct Chrome 136 brand token
+    "Sec-Ch-Ua": '"Google Chrome";v="136", "Chromium";v="136", "Not A Brand";v="99"',
     "Sec-Ch-Ua-Mobile": "?0",
     "Sec-Ch-Ua-Platform": '"Windows"',
+    "Sec-Ch-Ua-Platform-Version": '"15.0.0"',  # Windows 11
     "Priority": "u=0, i",
 }
 
@@ -124,6 +130,7 @@ def _http_get(url, ua, referer=None):
             headers["Referer"] = referer
     elif ua == _UA_FIREFOX:
         headers.update(_BROWSER_EXTRA)
+        headers["TE"] = "trailers"  # Firefox always sends this; Chrome does not
         if referer:
             headers["Referer"] = referer
     req = urllib.request.Request(url, headers=headers)
@@ -155,7 +162,8 @@ def fetch_feed(source, cutoff_date):
     last_err = None
     referer = _referer_for(url)
 
-    for i, ua in enumerate((_UA_FEEDLY, _UA_INOREADER, _UA_NEWSBLUR, _UA_FIREFOX, _UA_CHROME)):
+# TODO _UA_FEEDLY, _UA_INOREADER, _UA_NEWSBLUR, 
+    for i, ua in enumerate((_UA_FIREFOX, _UA_CHROME)):
         if i > 0:
             time.sleep(random.uniform(0.8, 2.0))
         try:
