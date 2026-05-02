@@ -1,134 +1,133 @@
 # Sources RSS pour la veille technologique
 # Ajouter une source : copier un bloc ci-dessous avec name + url [+ category_override]
+ 
 
 sources:
-
-  # ── Généraliste francophone ──────────────────────────────────────────────────
-
-  - name: Human Coders News
-    url: https://news.humancoders.com/items/feed.rss
-    site: https://news.humancoders.com
-    description: Actualités dev collaboratives par et pour les développeurs
-
+ # ── Généraliste francophone ──────────────────────────────────────────────────
   - name: Journal du Hacker
     url: https://www.journalduhacker.net/rss
     site: https://www.journalduhacker.net
     description: Agrégateur communautaire de news tech francophones
+    limit: 5
 
   - name: Dépêches LinuxFr.org
     url: https://linuxfr.org/news.atom
     site: https://linuxfr.org/
     description: Actualités du Libre et Open Source
-
-  # ── Forge logicielle ────────────────────────────────────────────────────────
+    limit: 5
 
   - name: Jenkins Blog
     url: https://www.jenkins.io/blog/rss.xml
     site: https://www.jenkins.io
     description: Blog officiel Jenkins - actualités et nouvelles versions
     category_override: forge/Jenkins
+    limit: 5
 
   - name: SonarQube Releases
     url: https://github.com/SonarSource/sonarqube/releases.atom
     site: https://www.sonarsource.com
     description: Nouvelles versions SonarQube (GitHub releases)
     category_override: forge/Sonar
-
-  - name: SonarSource Blog
-    url: https://www.sonarsource.com/blog/rss/
-    site: https://www.sonarsource.com
-    description: Blog SonarSource - SonarQube, SonarCloud, qualité de code
-    category_override: forge/Sonar
+    limit: 5
 
   - name: GitLab Blog
     url: https://about.gitlab.com/atom.xml
     site: https://about.gitlab.com
     description: Blog officiel GitLab - fonctionnalités et nouvelles versions
     category_override: forge/GitLab
+    limit: 5
 
   - name: Harbor Releases
     url: https://github.com/goharbor/harbor/releases.atom
     site: https://goharbor.io
     description: Nouvelles versions Harbor - registry de conteneurs CNCF
     category_override: forge/Harbor
+    limit: 5
 
   - name: Atlassian Blog
-    url: https://www.atlassian.com/blog/rss
+    url: https://atlassianblog.wpengine.com/feed
     site: https://www.atlassian.com/blog
     description: Blog Atlassian - Jira, Confluence, Bitbucket
     category_override: forge/Jira
+    limit: 5
 
   - name: Jira Releases
-    url: https://confluence.atlassian.com/jira/jira-release-notes-197363489.feed
+    url: https://confluence.atlassian.com/createrssfeed.action?types=page&spaces=JIRASOFTWARE&title=Jira+Software+release+notes+feed&labelString=&excludedSpaceKeys=&sort=modified&maxResults=15&timeSpan=30&showContent=false
     site: https://www.atlassian.com/software/jira
     description: Notes de version Jira Server/DC
     category_override: forge/Jira
+    limit: 5
 
   - name: SquashTM Releases
     url: https://github.com/squashtest-shadow/squash-tm/releases.atom
     site: https://squashtest.com
     description: Nouvelles versions Squash TM - gestion des tests
     category_override: forge/SquashTM
-
-  # ── Intelligence Artificielle & Claude Code ─────────────────────────────────
+    limit: 5
 
   - name: Anthropic Blog
     url: https://www.anthropic.com/rss.xml
     site: https://www.anthropic.com
     description: Blog Anthropic - Claude, Claude Code, recherche en IA
     category_override: IA/Claude
+    limit: 5
 
   - name: OpenAI Blog
     url: https://openai.com/blog/rss.xml
     site: https://openai.com/blog
     description: Blog OpenAI - ChatGPT, GPT, recherche IA
     category_override: IA/OpenAI
+    limit: 5
 
   - name: Google DeepMind Blog
     url: https://deepmind.google/blog/rss.xml
     site: https://deepmind.google
     description: Blog DeepMind - recherche IA fondamentale
     category_override: IA/DeepMind
+    limit: 5
 
   - name: MIT Technology Review IA
     url: https://www.technologyreview.com/topic/artificial-intelligence/feed
     site: https://www.technologyreview.com
     description: Analyses IA du MIT Technology Review
     category_override: IA/général
-
-  # ── Santé numérique & CTO ───────────────────────────────────────────────────
+    limit: 5
 
   - name: CERT-FR Alertes
     url: https://www.cert.ssi.gouv.fr/alerte/feed/
     site: https://www.cert.ssi.gouv.fr
     description: Alertes de sécurité ANSSI - vulnérabilités critiques
     category_override: sécurité/CERT-FR
+    limit: 5
 
   - name: CERT-FR Avis
     url: https://www.cert.ssi.gouv.fr/avis/feed/
     site: https://www.cert.ssi.gouv.fr
     description: Avis de sécurité ANSSI - mises à jour recommandées
     category_override: sécurité/CERT-FR
+    limit: 5
 
   - name: Agence du Numérique en Santé
-    url: https://esante.gouv.fr/actualites/feed
+    url: https://esante.gouv.fr/rss.xml
     site: https://esante.gouv.fr
     description: ANS - actualités numérique en santé, interopérabilité, HDS
     category_override: santé-numérique/ANS
+    limit: 5
 
   - name: Silicon.fr
     url: https://www.silicon.fr/feed
     site: https://www.silicon.fr
     description: IT et digital pour les décideurs - cloud, DevOps, IA
     category_override: IT/décideurs
+    limit: 5
 
   - name: Le Monde Informatique
     url: https://www.lemondeinformatique.fr/rss/rss-actualites.xml
     site: https://www.lemondeinformatique.fr
     description: Actualités IT professionnelles - infrastructure, sécurité, cloud
     category_override: IT/décideurs
+    limit: 5
 
-  # ── En anglais ───────────────────────────────────────────────────
   - name: Hacker News
     url: https://www.daemonology.net/hn-daily/index.rss
     site: https://news.ycombinator.com
@@ -140,4 +139,172 @@ sources:
     url: https://lobste.rs/rss
     site: https://lobste.rs
     description: Curated tech links voted on by the community
-    limit: 4
+    limit: 5
+
+  - name: TechCrunch
+    url: https://techcrunch.com/feed/
+    site: https://techcrunch.com
+    description: Actualités startups, produits, IA et tech grand public
+    category_override: IT/général
+    limit: 5
+
+  - name: The Verge
+    url: https://www.theverge.com/rss/index.xml
+    site: https://www.theverge.com
+    description: Actualités tech, hardware, plateformes et internet
+    category_override: IT/général
+    limit: 5
+
+  - name: Ars Technica
+    url: https://feeds.arstechnica.com/arstechnica/index
+    site: https://arstechnica.com
+    description: Analyse tech, infrastructure, sécurité et science
+    category_override: IT/général
+    limit: 5
+
+  - name: InfoQ
+    url: https://feed.infoq.com/
+    site: https://www.infoq.com
+    description: Architecture, software engineering, cloud et practices d'ingénierie
+    category_override: IT/architecture
+    limit: 5
+
+  - name: DEV Community
+    url: https://dev.to/feed
+    site: https://dev.to
+    description: Articles de développeurs, retours d'expérience et tutoriels
+    category_override: dev/general
+    limit: 5
+
+  - name: GitHub Blog
+    url: https://github.blog/feed/
+    site: https://github.blog
+    description: Annonces GitHub, outils dev et écosystème open source
+    category_override: forge/GitHub
+    limit: 5
+
+  - name: Open Source Initiative
+    url: https://opensource.org/feed
+    site: https://opensource.org
+    description: Actualités et références autour de l'open source
+    category_override: open-source/general
+    limit: 5
+
+  - name: Red Hat Developer Blog
+    url: https://developers.redhat.com/blog/feed
+    site: https://developers.redhat.com
+    description: Kubernetes, containers, cloud native et Linux enterprise
+    category_override: cloud/kubernetes
+    limit: 5
+
+  - name: Kubernetes Blog
+    url: https://kubernetes.io/feed.xml
+    site: https://kubernetes.io
+    description: Nouvelles, évolutions et bonnes pratiques Kubernetes
+    category_override: cloud/kubernetes
+    limit: 5
+
+  - name: Docker Blog
+    url: https://www.docker.com/blog/feed/
+    site: https://www.docker.com
+    description: Docker, containers et développement cloud-native
+    category_override: cloud/containers
+    limit: 5
+
+  - name: HashiCorp Blog
+    url: https://www.hashicorp.com/blog/feed.xml
+    site: https://www.hashicorp.com
+    description: Terraform, Vault, Nomad et automatisation infra
+    category_override: cloud/iac
+    limit: 5
+
+  - name: AWS News Blog
+    url: https://aws.amazon.com/blogs/aws/feed/
+    site: https://aws.amazon.com/blogs/aws/
+    description: Nouvelles annonces et services AWS
+    category_override: cloud/aws
+    limit: 5
+
+  - name: Google Cloud Blog
+    url: https://cloud.google.com/blog/rss
+    site: https://cloud.google.com/blog
+    description: Annonces et nouveautés Google Cloud
+    category_override: cloud/gcp
+    limit: 5
+
+  - name: CISA Alerts
+    url: https://www.cisa.gov/news.xml
+    site: https://www.cisa.gov
+    description: Alertes cybersécurité et communications CISA
+    category_override: sécurité/cyber
+    limit: 5
+
+  - name: Krebs on Security
+    url: https://krebsonsecurity.com/feed/
+    site: https://krebsonsecurity.com
+    description: Veille cyber sécurité, fraude et menaces
+    category_override: sécurité/cyber
+    limit: 5
+
+  - name: The Hacker News
+    url: https://feeds.feedburner.com/TheHackersNews
+    site: https://thehackernews.com
+    description: Actualités cybersécurité et vulnérabilités
+    category_override: sécurité/cyber
+    limit: 5
+
+  - name: NVD Recent CVEs
+    url: https://nvd.nist.gov/feeds/xml/cve/misc/nvd-rss-recent.xml
+    site: https://nvd.nist.gov
+    description: Vulnérabilités CVE récentes du NVD
+    category_override: sécurité/cve
+    limit: 5
+
+  - name: Hugging Face Blog
+    url: https://huggingface.co/blog/feed.xml
+    site: https://huggingface.co/blog
+    description: Modèles open source, IA générative et MLOps
+    category_override: IA/HuggingFace
+    limit: 5
+
+  - name: OpenAI News
+    url: https://openai.com/news/rss.xml
+    site: https://openai.com/news
+    description: Annonces OpenAI, produits et recherche
+    category_override: IA/OpenAI
+    limit: 5
+
+  - name: Anthropic News
+    url: https://www.anthropic.com/news/rss.xml
+    site: https://www.anthropic.com/news
+    description: Annonces Claude, Claude Code et recherche IA
+    category_override: IA/Claude
+    limit: 5
+
+  - name: MIT News AI
+    url: https://news.mit.edu/rss/topic/artificial-intelligence2
+    site: https://news.mit.edu
+    description: Recherche et avancées IA côté MIT
+    category_override: IA/général
+    limit: 5
+
+  - name: Product Hunt
+    url: https://www.producthunt.com/feed
+    site: https://www.producthunt.com
+    description: Nouveaux produits et tendances startup
+    category_override: produit/startups
+    limit: 5
+
+  - name: Stratechery
+    url: https://stratechery.com/feed/
+    site: https://stratechery.com
+    description: Analyse stratégie produit, plateformes et économie du web
+    category_override: business/tech
+    limit: 5
+
+  - name: Lenny's Newsletter
+    url: https://www.lennysnewsletter.com/feed
+    site: https://www.lennysnewsletter.com
+    description: Produit, croissance et management tech
+    category_override: produit/gestion
+    limit: 5

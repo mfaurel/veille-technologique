@@ -73,7 +73,11 @@ def fetch_feed(source, cutoff_date):
     articles = []
 
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "veille-techno/1.0"})
+        req = urllib.request.Request(url, headers={
+            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:125.0) Gecko/20100101 Firefox/125.0",
+            "Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml, */*;q=0.8",
+            "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8",
+        })
         with urllib.request.urlopen(req, timeout=15) as resp:
             data = resp.read()
     except Exception as e:

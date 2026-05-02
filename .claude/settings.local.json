@@ -1,7 +1,19 @@
 {
   "permissions": {
     "allow": [
-      "Skill(schedule)"
+      "Skill(schedule)",
+      "WebFetch(domain:news.humancoders.com)",
+      "WebFetch(domain:openai.com)",
+      "WebFetch(domain:deepmind.google)",
+      "WebFetch(domain:www.technologyreview.com)",
+      "WebFetch(domain:about.gitlab.com)",
+      "WebFetch(domain:www.sonarsource.com)",
+      "WebFetch(domain:www.atlassian.com)",
+      "WebFetch(domain:confluence.atlassian.com)",
+      "WebFetch(domain:www.cert.ssi.gouv.fr)",
+      "WebFetch(domain:esante.gouv.fr)",
+      "WebSearch",
+      "WebFetch(domain:atlassianblog.wpengine.com)"
     ]
   }
 }
