@@ -4,9 +4,11 @@
 import gzip
 import html
 import io
+import random
 import re
 import ssl
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -76,9 +78,10 @@ def parse_rss_date(date_str):
 
 
 _UA_FEEDLY = "Feedly/1.0 (+http://www.feedly.com/fetcher.html; 100 subscribers)"
-_UA_FIREFOX = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0"
-_UA_CHROME = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
 _UA_INOREADER = "Inoreader/1.0 (https://www.inoreader.com)"
+_UA_NEWSBLUR = "NewsBlur RSS Robot - http://www.newsblur.com"
+_UA_FIREFOX = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0"
+_UA_CHROME = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
 
 # Headers common to all UAs
 _BASE_HEADERS = {
@@ -99,6 +102,14 @@ _BROWSER_EXTRA = {
     "Cache-Control": "max-age=0",
 }
 
+_CHROME_EXTRA = {
+    **_BROWSER_EXTRA,
+    "Sec-Ch-Ua": '"Chromium";v="136", "Google Chrome";v="136", "Not-A.Brand";v="99"',
+    "Sec-Ch-Ua-Mobile": "?0",
+    "Sec-Ch-Ua-Platform": '"Windows"',
+    "Priority": "u=0, i",
+}
+
 # Permissive SSL context so self-signed / misconfigured certs don't block us
 _SSL_CTX = ssl.create_default_context()
 _SSL_CTX.check_hostname = False
@@ -107,7 +118,11 @@ _SSL_CTX.verify_mode = ssl.CERT_NONE
 
 def _http_get(url, ua, referer=None):
     headers = {**_BASE_HEADERS, "User-Agent": ua}
-    if ua in (_UA_FIREFOX, _UA_CHROME):
+    if ua == _UA_CHROME:
+        headers.update(_CHROME_EXTRA)
+        if referer:
+            headers["Referer"] = referer
+    elif ua == _UA_FIREFOX:
         headers.update(_BROWSER_EXTRA)
         if referer:
             headers["Referer"] = referer
@@ -140,7 +155,9 @@ def fetch_feed(source, cutoff_date):
     last_err = None
     referer = _referer_for(url)
 
-    for ua in (_UA_FEEDLY, _UA_INOREADER, _UA_FIREFOX, _UA_CHROME):
+    for i, ua in enumerate((_UA_FEEDLY, _UA_INOREADER, _UA_NEWSBLUR, _UA_FIREFOX, _UA_CHROME)):
+        if i > 0:
+            time.sleep(random.uniform(0.8, 2.0))
         try:
             data, ct = _http_get(url, ua, referer=referer)
             # If server returned HTML instead of XML (e.g. login wall), treat as error
@@ -228,7 +245,7 @@ def main():
     errors = []
 
     # Fetch all feeds in parallel
-    with ThreadPoolExecutor(max_workers=min(len(sources), 10)) as pool:
+    with ThreadPoolExecutor(max_workers=min(len(sources), 5)) as pool:
         futures = {pool.submit(fetch_feed, s, cutoff_date): s for s in sources}
         for future in as_completed(futures):
             articles, error = future.result()
