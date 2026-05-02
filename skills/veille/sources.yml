@@ -1,6 +1,4 @@
 # Sources RSS pour la veille technologique
-# Ajouter une source : copier un bloc ci-dessous avec name + url [+ category_override]
- 
 
 sources:
 
@@ -10,6 +8,8 @@ sources:
     site: https://www.journalduhacker.net
     description: Agrégateur communautaire de news tech francophones
     limit: 5
+    max_items: 5
+    max_age_hours: 72
 
   - name: Silicon.fr
     url: https://www.silicon.fr/feed
@@ -17,6 +17,8 @@ sources:
     description: IT et digital pour les décideurs - cloud, DevOps, IA
     category_override: IT/décideurs
     limit: 5
+    max_items: 5
+    max_age_hours: 72
 
   - name: Le Monde Informatique
     url: https://www.lemondeinformatique.fr/flux-rss/thematique/toutes-les-actualites/rss.xml
@@ -24,14 +26,18 @@ sources:
     description: Actualités IT professionnelles - infrastructure, sécurité, cloud
     category_override: IT/décideurs
     limit: 5
+    max_items: 5
+    max_age_hours: 72
 
  # ── Forge ──────────────────────────────────────────────────
   - name: Jenkins Blog
-    url: https://feeds.feedburner.com/ContinuousBlog/
+    url: https://www.jenkins.io/changelog/rss.xml
     site: https://www.jenkins.io
     description: Blog officiel Jenkins - actualités et nouvelles versions
     category_override: forge/Jenkins
     limit: 5
+    max_items: 5
+    max_age_hours: 72
 
   - name: SonarQube Releases
     url: https://community.sonarsource.com/c/sc/announcements/21.rss
@@ -39,6 +45,8 @@ sources:
     description: Nouvelles versions SonarQube (GitHub releases)
     category_override: forge/Sonar
     limit: 5
+    max_items: 5
+    max_age_hours: 72
 
 # - name: GitLab Blog
 #   url: https://docs.gitlab.com/releases/patches
@@ -53,6 +61,8 @@ sources:
     description: Nouvelles versions Harbor - registry de conteneurs CNCF
     category_override: forge/Harbor
     limit: 5
+    max_items: 5
+    max_age_hours: 72
 
 #  - name: Atlassian Blog
 #    url: Todo
@@ -67,6 +77,8 @@ sources:
     description: Flux public Jira (fallback)
     category_override: forge/Jira
     limit: 5
+    max_items: 5
+    max_age_hours: 72
 
 #  - name: SquashTM Releases
 #    url: Todo
@@ -74,36 +86,6 @@ sources:
 #    description: Nouvelles versions Squash TM - gestion des tests
 #    category_override: forge/SquashTM
 #    limit: 5
-
- # ── Sécurité ──────────────────────────────────────────────────
-
-  - name: CERT-FR Alertes
-    url: https://www.cert.ssi.gouv.fr/alerte/feed/
-    site: https://www.cert.ssi.gouv.fr
-    description: Alertes de sécurité ANSSI - vulnérabilités critiques
-    category_override: sécurité/CERT-FR
-    limit: 5
-
-  - name: CERT-FR Avis
-    url: https://www.cert.ssi.gouv.fr/avis/feed/
-    site: https://www.cert.ssi.gouv.fr
-    description: Avis de sécurité ANSSI - mises à jour recommandées
-    category_override: sécurité/CERT-FR
-    limit: 5
-
-  - name: CISA Alerts
-    url: https://www.cisa.gov/news.xml
-    site: https://www.cisa.gov
-    description: Alertes cybersécurité et communications CISA
-    category_override: sécurité/cyber
-    limit: 5
-
-  - name: NVD Recent CVEs
-    url: https://cvefeed.io/rssfeed/latest.xml
-    site: https://cvefeed.io
-    description: CVE récentes (NVD a retiré ses flux RSS, alternative cvefeed.io)
-    category_override: sécurité/cve
-    limit: 5
 
  # ── Santé ──────────────────────────────────────────────────
 
@@ -113,6 +95,8 @@ sources:
     description: ANS - actualités numérique en santé, interopérabilité, HDS
     category_override: santé-numérique/ANS
     limit: 5
+    max_items: 5
+    max_age_hours: 72
 
  # ── Anglais ──────────────────────────────────────────────────
 
@@ -121,7 +105,9 @@ sources:
     site: https://www.technologyreview.com
     description: Analyses IA du MIT Technology Review
     category_override: IA/général
-    limit: 5
+    limit: 1
+    max_items: 5
+    max_age_hours: 72
 
   - name: Hacker News
     url: https://www.daemonology.net/hn-daily/index.rss
@@ -129,6 +115,8 @@ sources:
     description: Top 5 stories per day from Hacker News Daily
     parser: hn-daily
     limit: 5
+    max_items: 5
+    max_age_hours: 72
 
   - name: Lobste.rs
     url: https://lobste.rs/rss
@@ -142,20 +130,8 @@ sources:
     description: Version feedburner (plus stable)
     category_override: IT/général
     limit: 5
-
-  - name: The Verge
-    url: https://www.theverge.com/rss/index.xml
-    site: https://www.theverge.com
-    description: Actualités tech, hardware, plateformes et internet
-    category_override: IT/général
-    limit: 5
-
-  - name: Ars Technica
-    url: https://feeds.arstechnica.com/arstechnica/index
-    site: https://arstechnica.com
-    description: Analyse tech, infrastructure, sécurité et science
-    category_override: IT/général
-    limit: 5
+    max_items: 5
+    max_age_hours: 72
 
   - name: DEV Community
     url: https://dev.to/feed
@@ -163,6 +139,8 @@ sources:
     description: Articles de développeurs, retours d'expérience et tutoriels
     category_override: dev/general
     limit: 5
+    max_items: 5
+    max_age_hours: 72
 
   - name: Open Source Initiative
     url: https://opensource.org/feed
@@ -170,6 +148,8 @@ sources:
     description: Actualités et références autour de l'open source
     category_override: open-source/general
     limit: 5
+    max_items: 5
+    max_age_hours: 72
 
   - name: The Hacker News
     url: https://feeds.feedburner.com/TheHackersNews
@@ -177,3 +157,34 @@ sources:
     description: Actualités cybersécurité et vulnérabilités
     category_override: sécurité/cyber
     limit: 5
+    max_items: 5
+    max_age_hours: 72
+
+ # ── Sécurité ──────────────────────────────────────────────────
+
+  - name: CERT-FR Alertes
+    url: https://www.cert.ssi.gouv.fr/alerte/feed/
+    site: https://www.cert.ssi.gouv.fr
+    description: Alertes de sécurité ANSSI - vulnérabilités critiques
+    category_override: sécurité/CERT-FR
+    limit: 5
+    max_items: 5
+    max_age_hours: 72
+
+  - name: CERT-FR Avis
+    url: https://www.cert.ssi.gouv.fr/avis/feed/
+    site: https://www.cert.ssi.gouv.fr
+    description: Avis de sécurité ANSSI - mises à jour recommandées
+    category_override: sécurité/CERT-FR
+    limit: 5
+    max_items: 5
+    max_age_hours: 72
+
+  - name: NVD Recent CVEs
+    url: https://cvefeed.io/rssfeed/severity/high.xml
+    site: https://cvefeed.io
+    description: CVE récentes (NVD a retiré ses flux RSS, alternative cvefeed.io)
+    category_override: sécurité/cve
+    limit: 5
+    max_items: 5
+    max_age_hours: 72
