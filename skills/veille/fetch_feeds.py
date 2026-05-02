@@ -5,8 +5,10 @@ import gzip
 import html
 import io
 import re
+import ssl
 import sys
 import urllib.error
+import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
 import zlib
@@ -73,24 +75,46 @@ def parse_rss_date(date_str):
     return None
 
 
-_UA_BROWSER = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0"
 _UA_FEEDLY = "Feedly/1.0 (+http://www.feedly.com/fetcher.html; 100 subscribers)"
+_UA_FIREFOX = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0"
 _UA_CHROME = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+_UA_INOREADER = "Inoreader/1.0 (https://www.inoreader.com)"
 
-_COMMON_HEADERS = {
+# Headers common to all UAs
+_BASE_HEADERS = {
     "Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml, */*;q=0.8",
-    "Accept-Language": "fr-FR,fr;q=0.9,en-US;q=0.7,en;q=0.6",
+    "Accept-Language": "fr-FR,fr;q=0.9,en-US;q=0.7,en;q=0.5",
     "Accept-Encoding": "gzip, deflate",
     "Connection": "keep-alive",
-    "Cache-Control": "no-cache",
-    "Pragma": "no-cache",
     "DNT": "1",
 }
 
+# Extra headers that make browser UAs look more legitimate
+_BROWSER_EXTRA = {
+    "Upgrade-Insecure-Requests": "1",
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "none",
+    "Sec-Fetch-User": "?1",
+    "Cache-Control": "max-age=0",
+}
 
-def _http_get(url, ua):
-    req = urllib.request.Request(url, headers={**_COMMON_HEADERS, "User-Agent": ua})
-    with urllib.request.urlopen(req, timeout=15) as resp:
+# Permissive SSL context so self-signed / misconfigured certs don't block us
+_SSL_CTX = ssl.create_default_context()
+_SSL_CTX.check_hostname = False
+_SSL_CTX.verify_mode = ssl.CERT_NONE
+
+
+def _http_get(url, ua, referer=None):
+    headers = {**_BASE_HEADERS, "User-Agent": ua}
+    if ua in (_UA_FIREFOX, _UA_CHROME):
+        headers.update(_BROWSER_EXTRA)
+        if referer:
+            headers["Referer"] = referer
+    req = urllib.request.Request(url, headers=headers)
+    handler = urllib.request.HTTPSHandler(context=_SSL_CTX)
+    opener = urllib.request.build_opener(handler)
+    with opener.open(req, timeout=15) as resp:
         raw = resp.read()
         encoding = resp.getheader("Content-Encoding", "")
         ct = resp.getheader("Content-Type", "")
@@ -101,6 +125,12 @@ def _http_get(url, ua):
     return raw, ct
 
 
+def _referer_for(url):
+    """Return the homepage URL to use as Referer for a given feed URL."""
+    p = urllib.parse.urlparse(url)
+    return f"{p.scheme}://{p.netloc}/"
+
+
 def fetch_feed(source, cutoff_date):
     """Fetch a single RSS/Atom feed and return parsed articles."""
     url = source["url"]
@@ -108,22 +138,23 @@ def fetch_feed(source, cutoff_date):
     articles = []
     data = None
     last_err = None
+    referer = _referer_for(url)
 
-    for ua in (_UA_FEEDLY, _UA_BROWSER, _UA_CHROME):
+    for ua in (_UA_FEEDLY, _UA_INOREADER, _UA_FIREFOX, _UA_CHROME):
         try:
-            data, ct = _http_get(url, ua)
+            data, ct = _http_get(url, ua, referer=referer)
             # If server returned HTML instead of XML (e.g. login wall), treat as error
             if "text/html" in ct and b"<rss" not in data[:500] and b"<feed" not in data[:500]:
-                last_err = f"ERROR: {name} - got HTML response (bot wall?)"
+                last_err = f"ERROR: {name} - HTML response (bot wall?) with UA={ua[:30]}"
                 data = None
                 continue
             break
         except urllib.error.HTTPError as e:
-            last_err = f"ERROR: {name} - HTTP Error {e.code}: {e.reason}"
+            last_err = f"ERROR: {name} - HTTP {e.code} with UA={ua[:30]}"
             if e.code != 403:
                 break  # don't retry non-403 errors
         except Exception as e:
-            last_err = f"ERROR: {name} - {e}"
+            last_err = f"ERROR: {name} - {type(e).__name__}: {e}"
             break
 
     if data is None:
@@ -216,7 +247,7 @@ def main():
             seen[url] = a
     unique_articles = sorted(seen.values(), key=lambda a: a["date"], reverse=True)
 
-    # Output errors to stderr so stdout stays clean TSV
+    # Output errors to stderr for live debugging
     for err in errors:
         print(err, file=sys.stderr)
 
@@ -235,6 +266,14 @@ def main():
     print("SOURCES:")
     for s in sources:
         print(f"  {s['name']}\t{s.get('site', s['url'])}\t{s.get('description', '')}")
+
+    # Output errors section so the report can include them
+    if errors:
+        print("ERRORS:")
+        for err in errors:
+            # Strip leading "ERROR: " prefix for cleaner display
+            msg = err[len("ERROR: "):] if err.startswith("ERROR: ") else err
+            print(f"  {msg}")
 
 
 if __name__ == "__main__":

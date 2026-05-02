@@ -77,14 +77,23 @@ Format pour chaque article :
 - Nom de la source en italique
 - Si la description est vide ou "N/A", ne pas afficher la ligne de description
 
-3. **Pied de page** : le script affiche une section `SOURCES:` à la fin. Formate-la :
+3. **Pied de page** : le script affiche une section `SOURCES:` puis, si des erreurs ont eu lieu, une section `ERRORS:`. Formate-les :
 
 ```
 ---
 
 ### Sources consultées
 - [Nom de la source](URL du site) -- Description courte
+
+---
+
+### Erreurs de collecte
+| Source | Erreur |
+|---|---|
+| Nom de la source | message d'erreur |
 ```
+
+N'affiche la section "Erreurs de collecte" que si la section `ERRORS:` est présente dans la sortie du script.
 
 ### Étape 4 : Sauvegarder le rapport
 
@@ -100,11 +109,9 @@ Après avoir généré le markdown complet, sauvegarde-le dans le dossier `rappo
 
 ### Étape 5 : Gérer les erreurs
 
-- Si le script affiche des lignes `ERROR: ...` (sur stderr), affiche un avertissement au début du récap :
-
-```
-> **Note :** Le flux "[Nom de la source]" n'a pas pu être récupéré.
-```
-
 - Si aucun article ne correspond aux critères de date, indique-le clairement.
-- Si plus de la moitié des sources sont en erreur, signale-le en haut du rapport.
+- Si plus de la moitié des sources sont en erreur, signale-le en haut du rapport avec un bandeau :
+
+```
+> ⚠ **X sources sur Y en erreur** — voir la section "Erreurs de collecte" en bas du rapport.
+```
