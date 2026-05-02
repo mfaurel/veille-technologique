@@ -1,12 +1,19 @@
 #!/usr/bin/env python3
 """Fetch and parse RSS feeds from sources.yml, output TSV sorted by date."""
 
-import sys
-import os
-import re
+import gzip
 import html
+import io
+import re
+import sys
+import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
+import zlib
+
+# Force UTF-8 stdout on Windows (avoids cp1252 encoding errors)
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta, timezone
 from email.utils import parsedate_to_datetime
@@ -66,22 +73,61 @@ def parse_rss_date(date_str):
     return None
 
 
+_UA_BROWSER = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0"
+_UA_FEEDLY = "Feedly/1.0 (+http://www.feedly.com/fetcher.html; 100 subscribers)"
+_UA_CHROME = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+
+_COMMON_HEADERS = {
+    "Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml, */*;q=0.8",
+    "Accept-Language": "fr-FR,fr;q=0.9,en-US;q=0.7,en;q=0.6",
+    "Accept-Encoding": "gzip, deflate",
+    "Connection": "keep-alive",
+    "Cache-Control": "no-cache",
+    "Pragma": "no-cache",
+    "DNT": "1",
+}
+
+
+def _http_get(url, ua):
+    req = urllib.request.Request(url, headers={**_COMMON_HEADERS, "User-Agent": ua})
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        raw = resp.read()
+        encoding = resp.getheader("Content-Encoding", "")
+        ct = resp.getheader("Content-Type", "")
+    if encoding == "gzip" or (not encoding and raw[:2] == b"\x1f\x8b"):
+        raw = gzip.decompress(raw)
+    elif encoding in ("deflate", "zlib"):
+        raw = zlib.decompress(raw)
+    return raw, ct
+
+
 def fetch_feed(source, cutoff_date):
     """Fetch a single RSS/Atom feed and return parsed articles."""
     url = source["url"]
     name = source["name"]
     articles = []
+    data = None
+    last_err = None
 
-    try:
-        req = urllib.request.Request(url, headers={
-            "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:125.0) Gecko/20100101 Firefox/125.0",
-            "Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml, */*;q=0.8",
-            "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8",
-        })
-        with urllib.request.urlopen(req, timeout=15) as resp:
-            data = resp.read()
-    except Exception as e:
-        return articles, f"ERROR: {name} - {e}"
+    for ua in (_UA_FEEDLY, _UA_BROWSER, _UA_CHROME):
+        try:
+            data, ct = _http_get(url, ua)
+            # If server returned HTML instead of XML (e.g. login wall), treat as error
+            if "text/html" in ct and b"<rss" not in data[:500] and b"<feed" not in data[:500]:
+                last_err = f"ERROR: {name} - got HTML response (bot wall?)"
+                data = None
+                continue
+            break
+        except urllib.error.HTTPError as e:
+            last_err = f"ERROR: {name} - HTTP Error {e.code}: {e.reason}"
+            if e.code != 403:
+                break  # don't retry non-403 errors
+        except Exception as e:
+            last_err = f"ERROR: {name} - {e}"
+            break
+
+    if data is None:
+        return articles, last_err
 
     try:
         root = ET.fromstring(data)

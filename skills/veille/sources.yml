@@ -17,7 +17,7 @@ sources:
     limit: 5
 
   - name: Jenkins Blog
-    url: https://www.jenkins.io/blog/rss.xml
+    url: https://feeds.feedburner.com/ContinuousBlog/
     site: https://www.jenkins.io
     description: Blog officiel Jenkins - actualités et nouvelles versions
     category_override: forge/Jenkins
@@ -59,17 +59,10 @@ sources:
     limit: 5
 
   - name: SquashTM Releases
-    url: https://github.com/squashtest-shadow/squash-tm/releases.atom
+    url: https://gitlab.com/henixdevelopment/open-source/squash/squashtest-tm-staging/-/releases.atom
     site: https://squashtest.com
     description: Nouvelles versions Squash TM - gestion des tests
     category_override: forge/SquashTM
-    limit: 5
-
-  - name: Anthropic Blog
-    url: https://www.anthropic.com/rss.xml
-    site: https://www.anthropic.com
-    description: Blog Anthropic - Claude, Claude Code, recherche en IA
-    category_override: IA/Claude
     limit: 5
 
   - name: OpenAI Blog
@@ -122,7 +115,7 @@ sources:
     limit: 5
 
   - name: Le Monde Informatique
-    url: https://www.lemondeinformatique.fr/rss/rss-actualites.xml
+    url: https://www.lemondeinformatique.fr/flux-rss/thematique/toutes-les-actualites/rss.xml
     site: https://www.lemondeinformatique.fr
     description: Actualités IT professionnelles - infrastructure, sécurité, cloud
     category_override: IT/décideurs
@@ -225,13 +218,6 @@ sources:
     category_override: cloud/aws
     limit: 5
 
-  - name: Google Cloud Blog
-    url: https://cloud.google.com/blog/rss
-    site: https://cloud.google.com/blog
-    description: Annonces et nouveautés Google Cloud
-    category_override: cloud/gcp
-    limit: 5
-
   - name: CISA Alerts
     url: https://www.cisa.gov/news.xml
     site: https://www.cisa.gov
@@ -254,9 +240,9 @@ sources:
     limit: 5
 
   - name: NVD Recent CVEs
-    url: https://nvd.nist.gov/feeds/xml/cve/misc/nvd-rss-recent.xml
-    site: https://nvd.nist.gov
-    description: Vulnérabilités CVE récentes du NVD
+    url: https://cvefeed.io/rssfeed/latest.xml
+    site: https://cvefeed.io
+    description: CVE récentes (NVD a retiré ses flux RSS, alternative cvefeed.io)
     category_override: sécurité/cve
     limit: 5
 
@@ -272,13 +258,6 @@ sources:
     site: https://openai.com/news
     description: Annonces OpenAI, produits et recherche
     category_override: IA/OpenAI
-    limit: 5
-
-  - name: Anthropic News
-    url: https://www.anthropic.com/news/rss.xml
-    site: https://www.anthropic.com/news
-    description: Annonces Claude, Claude Code et recherche IA
-    category_override: IA/Claude
     limit: 5
 
   - name: MIT News AI
