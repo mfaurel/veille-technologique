@@ -77,6 +77,7 @@ def parse_rss_date(date_str):
     return None
 
 
+_UA_CUSTOM = "python:MonVeilleurRSS:1.0 (by u/tonpseudo)"
 _UA_FEEDLY = "Feedly/1.0 (+http://www.feedly.com/fetcher.html; 100 subscribers)"
 _UA_INOREADER = "Inoreader/1.0 (https://www.inoreader.com)"
 _UA_NEWSBLUR = "NewsBlur RSS Robot - http://www.newsblur.com"
@@ -124,15 +125,25 @@ _SSL_CTX.verify_mode = ssl.CERT_NONE
 
 def _http_get(url, ua, referer=None):
     headers = {**_BASE_HEADERS, "User-Agent": ua}
+    if referer:
+        headers["Referer"] = referer
+
     if ua == _UA_CHROME:
         headers.update(_CHROME_EXTRA)
-        if referer:
-            headers["Referer"] = referer
     elif ua == _UA_FIREFOX:
         headers.update(_BROWSER_EXTRA)
         headers["TE"] = "trailers"  # Firefox always sends this; Chrome does not
-        if referer:
-            headers["Referer"] = referer
+    elif ua == _UA_CUSTOM:
+        # Add basic browser headers to look like a "real" modern client
+        headers.update({
+            "Upgrade-Insecure-Requests": "1",
+            "Sec-Fetch-Dest": "document",
+            "Sec-Fetch-Mode": "navigate",
+            "Sec-Fetch-Site": "none",
+            "Sec-Fetch-User": "?1",
+            "Cache-Control": "max-age=0",
+        })
+    
     req = urllib.request.Request(url, headers=headers)
     handler = urllib.request.HTTPSHandler(context=_SSL_CTX)
     opener = urllib.request.build_opener(handler)
@@ -162,8 +173,7 @@ def fetch_feed(source, cutoff_date):
     last_err = None
     referer = _referer_for(url)
 
-# TODO _UA_FEEDLY, _UA_INOREADER, _UA_NEWSBLUR, 
-    for i, ua in enumerate((_UA_FIREFOX, _UA_CHROME)):
+    for i, ua in enumerate((_UA_CUSTOM, _UA_FEEDLY, _UA_INOREADER, _UA_NEWSBLUR, _UA_FIREFOX, _UA_CHROME)):
         if i > 0:
             time.sleep(random.uniform(0.8, 2.0))
         try:

@@ -40,12 +40,12 @@ sources:
     category_override: forge/Sonar
     limit: 5
 
-  - name: GitLab Blog
-    url: https://docs.gitlab.com/releases/patches
-    site: https://about.gitlab.com
-    description: Blog officiel GitLab - fonctionnalités et nouvelles versions
-    category_override: forge/GitLab
-    limit: 5
+# - name: GitLab Blog
+#   url: https://docs.gitlab.com/releases/patches
+#   site: https://about.gitlab.com
+#   description: Blog officiel GitLab - fonctionnalités et nouvelles versions
+#   category_override: forge/GitLab
+#   limit: 5
 
   - name: Harbor Releases
     url: https://github.com/goharbor/harbor/releases.atom
