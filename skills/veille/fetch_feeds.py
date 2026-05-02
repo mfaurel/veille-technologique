@@ -9,6 +9,7 @@ import re
 import ssl
 import sys
 import time
+import brotli 
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -124,37 +125,48 @@ _SSL_CTX.verify_mode = ssl.CERT_NONE
 
 
 def _http_get(url, ua, referer=None):
-    headers = {**_BASE_HEADERS, "User-Agent": ua}
+    headers = {
+        "User-Agent": ua,
+        "Accept": "application/rss+xml, application/xml;q=0.9, */*;q=0.8",
+        "Accept-Language": "fr-FR,fr;q=0.9,en;q=0.8",
+        "Accept-Encoding": "gzip, deflate, br",
+    }
+
     if referer:
         headers["Referer"] = referer
 
-    if ua == _UA_CHROME:
-        headers.update(_CHROME_EXTRA)
-    elif ua == _UA_FIREFOX:
-        headers.update(_BROWSER_EXTRA)
-        headers["TE"] = "trailers"  # Firefox always sends this; Chrome does not
-    elif ua == _UA_CUSTOM:
-        # Add basic browser headers to look like a "real" modern client
-        headers.update({
-            "Upgrade-Insecure-Requests": "1",
-            "Sec-Fetch-Dest": "document",
-            "Sec-Fetch-Mode": "navigate",
-            "Sec-Fetch-Site": "none",
-            "Sec-Fetch-User": "?1",
-            "Cache-Control": "max-age=0",
-        })
-    
     req = urllib.request.Request(url, headers=headers)
+
     handler = urllib.request.HTTPSHandler(context=_SSL_CTX)
     opener = urllib.request.build_opener(handler)
-    with opener.open(req, timeout=15) as resp:
-        raw = resp.read()
-        encoding = resp.getheader("Content-Encoding", "")
-        ct = resp.getheader("Content-Type", "")
-    if encoding == "gzip" or (not encoding and raw[:2] == b"\x1f\x8b"):
-        raw = gzip.decompress(raw)
-    elif encoding in ("deflate", "zlib"):
-        raw = zlib.decompress(raw)
+
+    try:
+        with opener.open(req, timeout=15) as resp:
+            raw = resp.read()
+            encoding = resp.getheader("Content-Encoding", "")
+            ct = resp.getheader("Content-Type", "")
+    except urllib.error.HTTPError as e:
+        # fallback sans headers agressifs
+        if e.code == 403:
+            req = urllib.request.Request(url, headers={"User-Agent": _UA_FEEDLY})
+            with opener.open(req, timeout=15) as resp:
+                raw = resp.read()
+                encoding = resp.getheader("Content-Encoding", "")
+                ct = resp.getheader("Content-Type", "")
+        else:
+            raise
+
+    # Décompression robuste
+    try:
+        if encoding == "gzip" or raw[:2] == b"\x1f\x8b":
+            raw = gzip.decompress(raw)
+        elif encoding in ("deflate", "zlib"):
+            raw = zlib.decompress(raw)
+        elif encoding == "br":
+            raw = brotli.decompress(raw)
+    except Exception:
+        pass
+
     return raw, ct
 
 

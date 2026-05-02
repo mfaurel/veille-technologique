@@ -61,10 +61,10 @@ sources:
 #    category_override: forge/Jira
 #    limit: 5
 
-  - name: Jira Releases
-    url: https://confluence.atlassian.com/createrssfeed.action?types=page&spaces=JIRASOFTWARE&title=Jira+Software+release+notes+feed&labelString=&excludedSpaceKeys=&sort=modified&maxResults=15&timeSpan=30&showContent=false
+  - name: Jira Releases (fallback)
+    url: https://jira.atlassian.com/sr/jira.issueviews:searchrequest-rss/temp/SearchRequest.xml?jqlQuery=project=JRASERVER&maxResults=15
     site: https://www.atlassian.com/software/jira
-    description: Notes de version Jira Server/DC
+    description: Flux public Jira (fallback)
     category_override: forge/Jira
     limit: 5
 
@@ -136,10 +136,10 @@ sources:
     description: Curated tech links voted on by the community
     limit: 5
 
-  - name: TechCrunch
-    url: https://techcrunch.com/feed/
+  - name: TechCrunch (alt)
+    url: https://feeds.feedburner.com/TechCrunch/
     site: https://techcrunch.com
-    description: Actualités startups, produits, IA et tech grand public
+    description: Version feedburner (plus stable)
     category_override: IT/général
     limit: 5
 
