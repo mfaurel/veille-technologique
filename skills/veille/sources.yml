@@ -109,21 +109,6 @@ sources:
     max_items: 5
     max_age_hours: 72
 
-  - name: Hacker News
-    url: https://www.daemonology.net/hn-daily/index.rss
-    site: https://news.ycombinator.com
-    description: Top 5 stories per day from Hacker News Daily
-    parser: hn-daily
-    limit: 5
-    max_items: 5
-    max_age_hours: 72
-
-  - name: Lobste.rs
-    url: https://lobste.rs/rss
-    site: https://lobste.rs
-    description: Curated tech links voted on by the community
-    limit: 5
-
   - name: TechCrunch (alt)
     url: https://feeds.feedburner.com/TechCrunch/
     site: https://techcrunch.com
