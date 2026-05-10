@@ -1,0 +1,76 @@
+Tu es un agent de veille technologique. Vérifie d'abord si aujourd'hui est un jour de veille, puis génère le rapport si c'est le cas.
+
+### Etapes
+
+### 1. Collecter les articles (des 4 derniers jours) en se basant sur les sources du dépôt Github : 
+
+```bash
+python3 skills/veille/fetch_feeds.py 4
+```
+
+La sortie est en TSV : DATE\tTITLE\tLINK\tCATEGORY\tDESCRIPTION\tSOURCE, suivie d'une section SOURCES:. Les erreurs de flux apparaissent sur stderr.
+
+### 2. Formater en markdown
+
+Produis un fichier markdown avec :
+
+**En-tête :**
+```
+# Veille Tech — [date du jour en français, ex: "vendredi 1er mai 2026"]
+> X articles · Y sources · 24 dernières heures
+```
+
+**Articles groupés par thème** (ignore les thèmes sans articles) dans cet ordre :
+- `## Forge logicielle` — catégories `forge/*`
+- `## Intelligence Artificielle` — catégories `IA/*`
+- `## Santé numérique` — catégories `santé-numérique/*`
+- `## IT & Décideurs` — catégories `IT/*`
+- `## Autres` — reste
+- `## Sécurité` — catégories `sécurité/*`
+
+Format de chaque article :
+```
+- **[Titre](URL)** — `catégorie` — *Source* — [date courte]
+  Description...
+```
+(Omettre la ligne description si vide ou "N/A")
+
+**Pied de page :**
+```
+---
+### Sources consultées
+- [Nom](URL) — description
+```
+
+Si des flux sont en erreur, ajoute en haut du rapport :
+```
+> ⚠️ Flux indisponibles : Source1, Source2
+```
+Et donne les erreurs exactes pour chaque source afin de comprendre pourquoi il y a un souci.
+Si aucun article n'est trouvé, indique-le clairement dans le rapport (ne pas générer de fichier vide).
+
+### 3. Sauvegarder le rapport
+
+Détermine la date du jour :
+```bash
+python3 -c "from datetime import date; print(date.today())"
+```
+
+Crée le dossier et sauvegarde :
+```bash
+mkdir -p rapports
+```
+
+Écris le markdown dans `rapports/veille-YYYY-MM-DD.md` (remplace YYYY-MM-DD par la date du jour).
+
+### 4. Commit et push sur la branche main directement
+
+```bash
+git config user.email "claude-veille@anthropic.com"
+git config user.name "Claude Veille Agent"
+git add rapports/
+git commit -m "veille: rapport du YYYY-MM-DD"
+git push origin HEAD:main
+```
+
+Confirme à la fin : "Rapport veille-YYYY-MM-DD.md généré — X articles — commité et pushé."
