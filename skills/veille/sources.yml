@@ -11,15 +11,6 @@ sources:
     max_items: 5
     max_age_hours: 72
 
-  - name: Silicon.fr
-    url: https://www.silicon.fr/feed
-    site: https://www.silicon.fr
-    description: IT et digital pour les décideurs - cloud, DevOps, IA
-    category_override: IT/décideurs
-    limit: 5
-    max_items: 5
-    max_age_hours: 72
-
   - name: Le Monde Informatique
     url: https://www.lemondeinformatique.fr/flux-rss/thematique/toutes-les-actualites/rss.xml
     site: https://www.lemondeinformatique.fr
@@ -48,12 +39,12 @@ sources:
     max_items: 5
     max_age_hours: 72
 
-# - name: GitLab Blog
-#   url: https://docs.gitlab.com/releases/patches
-#   site: https://about.gitlab.com
-#   description: Blog officiel GitLab - fonctionnalités et nouvelles versions
-#   category_override: forge/GitLab
-#   limit: 5
+ - name: GitLab Blog
+   url: https://about.gitlab.com/atom.xml
+   site: https://about.gitlab.com
+   description: Blog officiel GitLab - fonctionnalités et nouvelles versions
+   category_override: forge/GitLab
+   limit: 5
 
   - name: Harbor Releases
     url: https://github.com/goharbor/harbor/releases.atom
@@ -64,28 +55,21 @@ sources:
     max_items: 5
     max_age_hours: 72
 
-#  - name: Atlassian Blog
-#    url: Todo
-#    site: https://www.atlassian.com/blog
-#    description: Blog Atlassian - Jira, Confluence, Bitbucket
-#    category_override: forge/Jira
-#    limit: 5
-
   - name: Jira Releases (fallback)
-    url: https://jira.atlassian.com/sr/jira.issueviews:searchrequest-rss/temp/SearchRequest.xml?jqlQuery=project=JRASERVER&maxResults=15
-    site: https://www.atlassian.com/software/jira
+    url: https://confluence.atlassian.com/cloud/blog
+    site: https://confluence.atlassian.com/cloud/blog
     description: Flux public Jira (fallback)
     category_override: forge/Jira
     limit: 5
     max_items: 5
     max_age_hours: 72
 
-#  - name: SquashTM Releases
-#    url: Todo
-#    site: https://squashtest.com
-#    description: Nouvelles versions Squash TM - gestion des tests
-#    category_override: forge/SquashTM
-#    limit: 5
+  - name: SquashTM Releases
+    url: https://www.squashtm.com/community-roadmap-releases
+    site: https://squashtest.com
+    description: Nouvelles versions Squash TM - gestion des tests
+    category_override: forge/SquashTM
+    limit: 5
 
  # ── Santé ──────────────────────────────────────────────────
 
@@ -165,11 +149,11 @@ sources:
     max_items: 5
     max_age_hours: 72
 
-  - name: NVD Recent CVEs
-    url: https://cvefeed.io/rssfeed/severity/high.xml
-    site: https://cvefeed.io
-    description: CVE récentes (NVD a retiré ses flux RSS, alternative cvefeed.io)
-    category_override: sécurité/cve
-    limit: 5
-    max_items: 5
-    max_age_hours: 72
+#  - name: NVD Recent CVEs
+#    url: https://cvefeed.io/rssfeed/severity/high.xml
+#    site: https://cvefeed.io
+#    description: CVE récentes (NVD a retiré ses flux RSS, alternative cvefeed.io)
+#    category_override: sécurité/cve
+#    limit: 5
+#    max_items: 5
+#    max_age_hours: 72
