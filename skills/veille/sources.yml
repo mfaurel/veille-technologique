@@ -55,22 +55,6 @@ sources:
     max_items: 5
     max_age_hours: 72
 
-  - name: Jira Releases (fallback)
-    url: https://confluence.atlassian.com/cloud/blog
-    site: https://confluence.atlassian.com/cloud/blog
-    description: Flux public Jira (fallback)
-    category_override: forge/Jira
-    limit: 5
-    max_items: 5
-    max_age_hours: 72
-
-  - name: SquashTM Releases
-    url: https://www.squashtm.com/community-roadmap-releases
-    site: https://squashtest.com
-    description: Nouvelles versions Squash TM - gestion des tests
-    category_override: forge/SquashTM
-    limit: 5
-
  # ── Santé ──────────────────────────────────────────────────
 
   - name: Agence du Numérique en Santé
